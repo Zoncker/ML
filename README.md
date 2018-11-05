@@ -26,7 +26,7 @@ non-generalizing (не обобщающие), поскольку они попр
 принимать как массивы NumPy, так и scipy.sparse матрицы на вход. Для плотных матриц поддерживается большое количество 
 метрик расстояния. Для разрежённых матриц доступны произвольные метрики Минковского(для поиска).
 
-#### Unsupervised Nearest Neighbors
+## Unsupervised Nearest Neighbors
 
 [NearestNeighbors](http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.NearestNeighbors.html#sklearn.neighbors.NearestNeighbors)
 предоставляет унифицированный интерфейс для трёх алгоритмов (BallTree, KDTree и грубый алгоритм, основанный на методах в
@@ -37,7 +37,6 @@ non-generalizing (не обобщающие), поскольку они попр
 параметра к brute force. 
 Подробнее:
 
-Класс 
 ```python
 class sklearn.neighbors.NearestNeighbors(n_neighbors=5,
                                          radius=1.0, 
@@ -113,7 +112,7 @@ array([[0.        , 1.        ],
 
 
 
-#####Brute Force
+### Brute Force
 
 Методы быстрых вычислений ближайших соседей активно исследуются до сих пор. 
 Наиболее *"наивный"* поиск соседей включает в себя *"грубые"* расчёты расстояний между всеми парами точек в выборке:
@@ -121,7 +120,7 @@ array([[0.        , 1.        ],
 для малых объёмов данных, потому как по мере роста выборки, согласно оценке, стремительно возрастает и сложность, делая 
 метод неприменимым.
 
-#####K-Dimensional Tree
+### K-Dimensional Tree
 
 Для замещения неэффективности использования метода выше были созданы разнообразные структуры данных, основанные на ***деревьях***.
 В общем случае, эти структуры пытаются уменьшить необходимое количество вычислений расстояний, эффективно кодируя 
@@ -212,7 +211,7 @@ tree.two_point_correlation(X, r)
 #array([ 30,  62, 278, 580, 820])
 ```
  
-#####Ball-Tree
+### Ball-Tree
 
 Данный метод решает проблему неэффективности KD - деревьев для многомерных случаев. Используется структура **ball tree**.
 Вместо разбиения данных вдоль осей прямоугольной системы, проводится разбиение данных в последовательность вложенных гиперсфер.
@@ -314,7 +313,7 @@ tree.two_point_correlation(X, r)
 | query                 | (X[, k, return_distance, dualtree, …]) | запрос к дереву на k ближайших  соседей                                                                        |
 | two_point_correlation | X, r, dualtree                         | Высчитывает двухточечную  корреляционную функцию                                                               |
 
-#####Метрики. DistanceMetric class
+## Метрики. DistanceMetric class
 
 Класс предоставляет интерфейс к "быстрым" функциям метрик расстояния. Различные метрики могут быть обращены через get_metric метод
 
@@ -381,7 +380,7 @@ dist.pairwise(X)
 | **pairwise**  | Расчёт попарного расстояния между x и y |
 | **rdist_to_dist**  | обратное 1 |
 
-#####Классификация ближайшими соседями
+## NN - классификация 
 
 Классификация с NN - пример необобщающего или основанного-на-экземпляре обучения: из названия понятно, что алгоритм не 
 пытается строить обобщённую внутреннюю модель, а просто хранит экземпляры обучающей выборки. Классификация расчитывается
@@ -400,7 +399,7 @@ scikit-learn реализует два классификатора NN: [KNeighb
 соседям, weights = 'distance' - обратно пропорционально относительно расстояния до исходной точки. Возможно использование 
 пользовательской функции расстояния для расчёта весов.
 
-####KNeighborsClassifier
+### KNeighborsClassifier
 
 Конструктор
 
@@ -429,14 +428,7 @@ scikit-learn реализует два классификатора NN: [KNeighb
 | **kneighbors** | ([X, n_neighbors, return_distance])                      | Поиск k соседей точки  
 | **kneighbors_graph** | (**params)                        | Расчёт взвешенного графа для k соседей точек X    
 
-#####NN - регрессия
-
-Данный метод может быть использован в случаях, когда ярлыки данных представлены непрерывными, а не дискретными значениями.
-Ярлык присвоенный запрашиваемой точке определяется из среднего ярлыков ближайших соседей. По аналогии с классификацией, в
-scikit-learn представлены два метода:  [KNeighborsRegressor](http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html#sklearn.neighbors.KNeighborsRegressor)
-и [RadiusNeighborsRegressor](http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.RadiusNeighborsRegressor.html#sklearn.neighbors.RadiusNeighborsRegressor)
-
-#####Nearest Centroid Classifier
+### Nearest Centroid Classifier
 
 [NearestCentroid](http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.NearestCentroid.html#sklearn.neighbors.NearestCentroid)
 классификатор - простой алгоритм, который представляет каждый класс центроидом его членов. Это делает алгоритм похожим по эффекту 
@@ -479,13 +471,20 @@ print(clf.predict([[-0.8, -1]]))
 #[1]
 ```
 
-####Nearest Shrunken Centroid
+#### Nearest Shrunken Centroid
 
 У NC есть параметр shrink_threshold, который реализует NSC. Значения каждого признака для каждого центроида разделены 
 внутриклассовой дисперсией этого признака. Значения признака после уменьшаются на shrink_threshold. Стоит заметить, что
 если значение конкретного признака пересечёт ноль, оно установится им же, т.е этот признак более не влияет на результат 
 классификации, это удобно применять для удаления шумных признаков.
 
+
+## NN - регрессия
+
+Данный метод может быть использован в случаях, когда ярлыки данных представлены непрерывными, а не дискретными значениями.
+Ярлык присвоенный запрашиваемой точке определяется из среднего ярлыков ближайших соседей. По аналогии с классификацией, в
+scikit-learn представлены два метода:  [KNeighborsRegressor](http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html#sklearn.neighbors.KNeighborsRegressor)
+и [RadiusNeighborsRegressor](http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.RadiusNeighborsRegressor.html#sklearn.neighbors.RadiusNeighborsRegressor)
 
 #####Kernel Density Estimation
 
