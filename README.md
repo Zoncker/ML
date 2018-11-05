@@ -509,7 +509,7 @@ print(clf.predict([[-0.8, -1]]))
 ## NN - регрессия
 
 Данный метод может быть использован в случаях, когда ярлыки данных представлены непрерывными, а не дискретными значениями.
-Ярлык присвоенный запрашиваемой точке определяется из среднего ярлыков ближайших соседей. По аналогии с классификацией, в
+Ярлык присвоенный запрашиваемой точке определяется из локальной интерполяции - среднего ярлыков ближайших соседей. По аналогии с классификацией, в
 scikit-learn представлены два метода:  [KNeighborsRegressor](http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html#sklearn.neighbors.KNeighborsRegressor)
 и [RadiusNeighborsRegressor](http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.RadiusNeighborsRegressor.html#sklearn.neighbors.RadiusNeighborsRegressor)
 Конструкторы классов и методы аналогичны таковым в классификации.
