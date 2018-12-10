@@ -1,4 +1,4 @@
-
+# Восстановление регрессии
 Задачу обучения по прецедентам ![](https://latex.codecogs.com/svg.latex?Y%20%3D%20%5Cmathbb%7BR%7D) принято называть *восстановлением регрессии*. Постановка задачи аналогична. 
 
 Модель алгоритмов задана в виде парам-кого семейства функций ![](https://latex.codecogs.com/svg.latex?%5Cinline%20f%28x%2C%5Calpha%20%29), а ![](https://latex.codecogs.com/svg.latex?%5Cinline%20%5Calpha%20%5Cin%20%5Cmathbb%7BR%7D%5Ep) - вектор параметров.
@@ -92,10 +92,37 @@
 ```
 Были применены квартическое ядро и ядро Епанечникова. (Ядро почти не влияет на результат, разница между ними минимальна). Стартовые параметры: *precision=0.007, step=0.04, featr=3, n=20*
 
+###  LOWESS (locally weighted scatterplot smoothing)
 
-| h_min  |  method | core          | SSE     |
+NW - оценка очень чувствительна к одиночным выбросам. Т.е, чем больше величина ошибки 
+
+![](https://latex.codecogs.com/gif.latex?%5Cvarepsilon_i%20%3D%20%7Ca_h%28x_i%3BX%5El/%5C%7Bx_i%5C%7D%29-y_i%7C)
+
+тем в большей степени объект является выбросом, и тем меньге должен быть его вес. Домножаем веса ![](https://latex.codecogs.com/svg.latex?%5Cinline%20w_i(x)) на коэффициенты ![](https://latex.codecogs.com/gif.latex?%5Cgamma_i%20%3D%20%5Ctilde%7BK%7D%28%5Cvarepsilon_i%29)
+
+#### Алгоритм LOWESS:
+обучающая выборка ![](https://latex.codecogs.com/gif.latex?X%5El)
+
+Выход:
+
+коэффициенты ![](https://latex.codecogs.com/gif.latex?%5Cgamma_i,i=1,%5Cdots,l)
+
+1. инициализация: ![](https://latex.codecogs.com/gif.latex?%5Cgamma_i=1,i=1,%5Cdots,l)
+2. повторять
+3. вычислить оценки скользящего контроля на каждом объекте: ![](https://latex.codecogs.com/gif.latex?a_h%28x%3B%20X%5El%29%20%3D%20%5Cfrac%7B%5Csum_%7Bi%3D1%7D%5El%20y_i%20w_i%28x%29%7D%7B%5Csum_%7Bi%3D1%7D%5El%20w_i%28x%29%7D%20%3D%20%5Cfrac%7B%20%5Csum_%7Bi%3D1%7D%5El%20y_i%20K%20%5Cleft%28%5Cfrac%7B%5Crho%28x%2Cx_i%29%7D%7Bh%7D%5Cright%29%7D%7B%5Csum_%7Bi%3D1%7D%5El%20K%20%5Cleft%28%5Cfrac%7B%5Crho%28x%2Cx_i%29%7D%7Bh%7D%5Cright%29%7D,i=1,%5Cdots,l)
+4. вычислить коэффициенты ![](https://latex.codecogs.com/gif.latex?%5Cgamma_i) :
+![](https://latex.codecogs.com/gif.latex?%5Cgamma_i%20%3D%20%5Ctilde%7BK%7D%28%7Ca_i-y_i%7C%29%2C%20i%20%3D1%2C%5Cdots%2Cl)
+5. Пока коэффициенты не стабилизируются. 
+
+#### Реализация
+
+Различия с NW методом заключаются в дополнительном учёте новых коэффициентов ![](https://latex.codecogs.com/gif.latex?%5Cgamma_i).
+
+| hopt  |  method | core          | SSE     |
 |-------|---------|---------------|---------|
 |  0.019(9)     | NW      | quartic       | 6714.07 |
 |   0.03    | NW      | epanenchnekov | 6737.99 |
+|   0.05   | LOWESS     | quartic | 6152.48 |
 
-![](NW.png)
+
+![](res.png)
