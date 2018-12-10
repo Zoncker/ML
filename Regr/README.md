@@ -163,6 +163,19 @@ NW - оценка очень чувствительна к одиночным в
 для задачи наименьших квадратов. Матрица ![](https://latex.codecogs.com/gif.latex?F%5ETF) имеет размер **n × n** и совпада-
 ет с ковариационной матрицей набора признаков ![](https://latex.codecogs.com/gif.latex?f_1%2C%20%5Cdots%2C%20f_n)
 
+### SVD. Линейная регрессия
+
+Если число признаков не превышает число объектов, ![](https://latex.codecogs.com/gif.latex?n%20%5Cleq%20l) и среди столбцов **F** нет л.з., то **F** можно представить сингулярным разложением (singular value decomposition): 
+
+![](https://latex.codecogs.com/gif.latex?F%20%3D%20VDU%5ET)
+
+свойства:
+1. **l × n** матрица **V** ортогональна, ![](https://latex.codecogs.com/gif.latex?V%5ETV%20%3D%20I_n) , и составлена из **n** собственных векторов матрицы ![](https://latex.codecogs.com/gif.latex?FF%5ET), соответствующих ненулевым собственным значениям;
+2. **n × n** матрица **U** ортогональна, ![](https://latex.codecogs.com/gif.latex?U%5ETU%20%3D%20I_n) , и составлена из собственных векторов матрицы  ![](https://latex.codecogs.com/gif.latex?F%5ETF);
+3. **n × n** матрица **D** диагональна, ![](https://latex.codecogs.com/gif.latex?D%20%3D%20diag%28%5Csqrt%7B%5Clambda_1%7D%2C%5Cdots%2C%20%5Csqrt%28%5Clambda_n%29%29), ![](https://latex.codecogs.com/gif.latex?%5Clambda_1%2C%5Cdots%2C%20%5Clambda_n) - собственные значения матриц ![](https://latex.codecogs.com/gif.latex?F%5ETF%2C%20FF%5ET)
+
+
+
 ### Проблема мультиколлинеарности
 Если ковариационная матрица ![](https://latex.codecogs.com/gif.latex?%5Cinline%20%5Csum%20%3D%20F%5ETF) имеет неполный ранг, то её обращение невозможно. 
 
@@ -212,4 +225,18 @@ NW - оценка очень чувствительна к одиночным в
 ![](https://latex.codecogs.com/gif.latex?F%5Calpha%5E*_%5Ctau%20%3D%20VDU%5ET%20%5Calpha%5E*_%5Ctau%20%3D%20V%20diag%5Cleft%28%5Cfrac%7B%5Clambda_j%7D%7B%5Clambda_j%20&plus;%20%5Ctau%7D%5Cright%29V%5ETy%20%3D%20%5Csum_%7Bj%3D1%7D%5Env_j%28v_j%5ETy%29%5Cfrac%7B%5Clambda_j%7D%7B%5Clambda_j%20&plus;%20%5Ctau%7D)
 
 
-МНК-аппроксимация - разложение **y** по базису собственных векторов ![](https://latex.codecogs.com/gif.latex?FF%5ET). 
+МНК-аппроксимация - разложение **y** по базису собственных векторов ![](https://latex.codecogs.com/gif.latex?FF%5ET).
+
+Проекции на собственные векторы сокращаются, уменьшается и норма вектора коэффициентов.
+
+Отсюда ещё одно название метода — сжатие (shrinkage) или сокращение весов (weight decay)
+По мере увеличения **τ** ![](https://latex.codecogs.com/gif.latex?%5Calpha%5E*_%5Ctau) становится более устойчивым/ понижение эффективной размерности решения.
+
+При использовании регуляризации эффективная размерность принимает значение от 0 до n, не обязательно целое, и убывает при возрастании **τ** : 
+
+![](https://latex.codecogs.com/gif.latex?tr%20F%28F%5ETF%20%3D%20%5Ctau%20I_n%29%5E%7B-1%7D%20%3D%20tr%20diag%20%5Cleft%20%28%20%5Cfrac%7B%5Clambda_j%7D%7B%5Clambda_j%20&plus;%20%5Ctau%7D%20%5Cright%20%29%20%3D%20%5Csum_%7Bj%3D1%7D%5En%20%5Cfrac%7B%5Clambda_j%7D%7B%5Clambda_j%20&plus;%20%5Ctau%7D%20%3C%20n)
+
+Подбирать  **τ**  можно по CV, но это слишком долгая процедура. На практике  **τ** - в диапазоне (0.1, 0.4)
+
+### Реализация
+
