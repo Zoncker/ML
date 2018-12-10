@@ -14,7 +14,12 @@
 
 ![](https://latex.codecogs.com/svg.latex?%5Calpha%5E*%20%3D%20%5Carg%5Cmin_%7B%5Calpha%5Cin%5Cmathbb%7BR%7D%5Ep%7D%20Q%28%5Calpha%2C%20X%5El%29)
 
-Решение оптимизационной задачи - использование необходимого условия минимума. Оно же и принимается за искомый вектор ![](https://latex.codecogs.com/svg.latex?%5Calpha^*).
+Решение оптимизационной задачи - использование необходимого условия минимума. Если функция ![](https://latex.codecogs.com/gif.latex?f%28x%2C%5Calpha%29) достаточное число раз дифференцируема по ![](https://latex.codecogs.com/gif.latex?%5Calpha), то в точке минимума выполняется система *p* уравнений относительно *p* неизвестных:
+
+
+![](https://latex.codecogs.com/gif.latex?%5Cfrac%7B%5Cpartial%20Q%7D%7B%5Cpartial%20%5Calpha%7D%28%5Calpha%2C%20X%5El%29%20%3D%202%5Csum%5El_%7Bi%3D1%7Dw_i%28f%28x_i%2Ca%29-y_i%29%20%5Cfrac%7B%5Cpartial%20f%7D%7B%5Cpartial%20%5Calpha%7D%28x_i%2C%20%5Calpha%29%20%3D%200)
+
+Решение же и принимается за искомый вектор ![](https://latex.codecogs.com/svg.latex?%5Calpha^*).
 
 ## Непараметрическая регрессия. Ядерное сглаживание.
 
@@ -126,3 +131,44 @@ NW - оценка очень чувствительна к одиночным в
 
 
 ![](res.png)
+
+
+## Многомерная линейная регрессия
+Имеется набор *n* вещественных признаков ![](https://latex.codecogs.com/gif.latex?f_j%28x%29%20%2C%20j%3D1%2C%5Cdots%2Cn)
+. Решение системы  
+
+![](https://latex.codecogs.com/gif.latex?%5Cfrac%7B%5Cpartial%20Q%7D%7B%5Cpartial%20%5Calpha%7D%28%5Calpha%2C%20X%5El%29%20%3D%202%5Csum%5El_%7Bi%3D1%7Dw_i%28f%28x_i%2Ca%29-y_i%29%20%5Cfrac%7B%5Cpartial%20f%7D%7B%5Cpartial%20%5Calpha%7D%28x_i%2C%20%5Calpha%29%20%3D%200)
+
+существенно упрощается, если модель алгоритмов линейна по ![](https://latex.codecogs.com/gif.latex?%5Calpha%20%5Cin%20%5Cmathbb%7BR%7D%5En):
+
+![](https://latex.codecogs.com/gif.latex?f%28x%2C%20%5Calpha%29%20%3D%20%5Csum_%7Bj%3D1%7D%5En%5Calpha_jf_j%28x%29)
+
+Вводятся матричные обозначения: матрицу информации *F* , целевой вектор *y*, вектор параметров *α* и диагональную матрицу весов *W* :
+
+
+![](https://latex.codecogs.com/gif.latex?F%20%3D%20%5Cbegin%7Bpmatrix%7D%20f_1%28x_1%29%20%26%20%5Cdots%20%26%20f_n%28x_n%29%5C%5C%20%5Cdots%20%26%20%5Cdots%20%26%20%5Cdots%5C%5C%20f_1%28x_l%29%20%26%20%5Cdots%20%26%20f_n%28x_l%29%20%5Cend%7Bpmatrix%7D%2C%20y%20%3D%20%5Cbegin%7Bpmatrix%7D%20y_1%5C%5C%20%5Cdots%5C%5C%20y_l%5C%5C%20%5Cend%7Bpmatrix%7D%2C%20%5Calpha%20%3D%20%5Cbegin%7Bpmatrix%7D%20%5Calpha_1%5C%5C%20%5Cdots%5C%5C%20%5Calpha_l%5C%5C%20%5Cend%7Bpmatrix%7D%2C%20%5Cbegin%7Bpmatrix%7D%20%5Csqrt%7Bw_1%7D%20%26%20%260%20%5C%5C%20%26%20%5Cddots%20%26%20%5C%5C%200%26%20%26%20%5Csqrt%7Bw_l%7D%20%5Cend%7Bpmatrix%7D)
+
+
+В матричных обозначениях функционал среднего квадрата ошибки принимает вид 
+
+![](https://latex.codecogs.com/gif.latex?Q%28a%29%20%3D%20%5Cleft%20%5C%7C%20W%28F%5Calpha-y%29%20%5Cright%20%5C%7C%5E2)
+
+### Нормальная система уравнений
+Необходимое условие минимума в матричном виде:
+ 
+
+![](https://latex.codecogs.com/gif.latex?%5Cfrac%7B%5Cpartial%20Q%7D%7B%5Cpartial%20%5Calpha%7D%28%5Calpha%29%20%3D%202F%5ET%28F%5Calpha-y%29%3D0%20%5Crightarrow%20F%5ETF%5Calpha%20%3D%20F%5ETy)
+
+Эта система линейных уравнений относительно α называется нормальной системой
+для задачи наименьших квадратов. Матрица ![](https://latex.codecogs.com/gif.latex?F%5ETF) имеет размер **n × n** и совпада-
+ет с ковариационной матрицей набора признаков ![](https://latex.codecogs.com/gif.latex?f_1%2C%20%5Cdots%2C%20f_n)
+
+### Проблема мультиколлинеарности
+Если ковариационная матрица ![](https://latex.codecogs.com/gif.latex?%5Cinline%20%5Csum%20%3D%20F%5ETF) имеет неполный ранг, то её обращение невозможно. 
+
+Часто встречается случай мультиколлинеарности, **Σ** имеет полный ранг, но близка к некоторой матрице неполного ранга.
+
+Тогда **Σ** — матрица неполного псевдоранга,и плохо обусловлена. Столбцы почти линейно зависимы, условие л.з выполняется приближённо. Аналогично для **F** .
+
+Геометрически - что объекты выборки сосредоточены около линейного подпространства меньшей размерности ***m < n***. 
+Признаком мультиколлинеарности является наличие у матрицы **Σ** собственных значений, близких к нулю.
