@@ -2,6 +2,6 @@
 Some ML labs and theory
 
 -----
-[Nearest Neighbors](NN/README.MD)
+[Nearest Neighbors](NN/README.md)
 -----
 
