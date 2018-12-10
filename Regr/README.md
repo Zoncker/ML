@@ -172,3 +172,44 @@ NW - оценка очень чувствительна к одиночным в
 
 Геометрически - что объекты выборки сосредоточены около линейного подпространства меньшей размерности ***m < n***. 
 Признаком мультиколлинеарности является наличие у матрицы **Σ** собственных значений, близких к нулю.
+
+Число обусловленности **Σ**:
+
+![](https://latex.codecogs.com/gif.latex?%5Cmu%28%5Csum%29%20%3D%20%5Cleft%20%5C%7C%20%5Csum%20%5Cright%20%5C%7C%5Cleft%20%5C%7C%20%5Csum%5E%7B-1%7D%20%5Cright%20%5C%7C%20%3D%20%5Cfrac%7B%5Cmax_%7Bu%3A%20%5Cleft%20%5C%7C%20u%20%5Cright%20%5C%7C%3D%201%7D%20%5Cleft%20%5C%7C%20%5Csum%20u%20%5Cright%20%5C%7C%20%7D%7B%5Cmin_%7Bu%3A%20%5Cleft%20%5C%7C%20u%20%5Cright%20%5C%7C%3D%201%7D%20%5Cleft%20%5C%7C%20%5Csum%20u%20%5Cright%20%5C%7C%20%7D%20%3D%20%5Cfrac%7B%5Clambda_%7B%5Cmax%7D%7D%7B%5Clambda_%7B%5Cmin%7D%7D)
+
+(шутки ради, TeX - код этой формулы
+\mu(\sum) = \left \| \sum \right \|\left \| \sum^{-1} \right \| = \frac{\max_{u: \left \| u \right \|= 1} \left \| \sum u \right \| }{\min_{u: \left \| u \right \|= 1} \left \| \sum u \right \| } = \frac{\lambda_{\max}}{\lambda_{\min}} )
+
+где ![](https://latex.codecogs.com/gif.latex?%5Clambda_%7B%5Cmin%7D%2C%20%5Clambda_%7B%5Cmax%7D) - максимальное и минимальное собственные значения матрицы **Σ**, все нормы евклидовы.
+
+### Ridge Regression
+
+Для решения проблемы мультиколлинеарности припишем к функционалу **Q** дополнительное слагаемое, штрафующее большие значения нормы вектора весов ![](https://latex.codecogs.com/gif.latex?%5Cleft%20%5C%7C%20%5Calpha%20%5Cright%20%5C%7C): 
+
+
+![](https://latex.codecogs.com/gif.latex?Q_%5Ctau%28%5Calpha%29%20%3D%20%5Cleft%20%5C%7C%20F%5Calpha%20-%20y%20%5Cright%20%5C%7C%5E2%20&plus;%20%5Ctau%5Cleft%20%5C%7C%20%5Calpha%20%5Cright%20%5C%7C%5E2)
+
+где ![](https://latex.codecogs.com/gif.latex?%5Ctau) неотрицательный параметр. 
+
+В случае мультиколлинеарности имеется бесконечно много векторов **α**, доставляющих функционалу Q значения, близкие к минимальному. 
+
+Штрафное слагаемое - регуляризатор, благодаря которому выбирается решение с минимальной нормой. 
+
+Приравнивая нулю производную ![](https://latex.codecogs.com/gif.latex?Q_%5Ctau%28%5Calpha%29) по параметру **α**, находим:
+
+
+![](https://latex.codecogs.com/gif.latex?%5Calpha%5E*_%5Ctau%20%3D%20%28F%5ETF&plus;%5Ctau%20I_n%29%5E%7B-1%7DF%5ETy)
+
+Перед обращением матрицы к ней добавляется «гребень» — диагональная матрица ![](https://latex.codecogs.com/gif.latex?%5Ctau%20I_n).
+
+Добавление гребня к матрице ![](https://latex.codecogs.com/gif.latex?F%5ETF) увеличивает все её собственные значения на **τ** , но не изменяет cобственных векторов. 
+
+Матрица становится хорошо обусловленной, оставаясь в то же время «похожей» на исходную.
+
+Регуляризованная МНК - аппроксимация через SVD вектора *y*: 
+
+
+![](https://latex.codecogs.com/gif.latex?F%5Calpha%5E*_%5Ctau%20%3D%20VDU%5ET%20%5Calpha%5E*_%5Ctau%20%3D%20V%20diag%5Cleft%28%5Cfrac%7B%5Clambda_j%7D%7B%5Clambda_j%20&plus;%20%5Ctau%7D%5Cright%29V%5ETy%20%3D%20%5Csum_%7Bj%3D1%7D%5Env_j%28v_j%5ETy%29%5Cfrac%7B%5Clambda_j%7D%7B%5Clambda_j%20&plus;%20%5Ctau%7D)
+
+
+МНК-аппроксимация - разложение **y** по базису собственных векторов ![](https://latex.codecogs.com/gif.latex?FF%5ET). 
