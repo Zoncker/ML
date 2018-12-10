@@ -174,6 +174,65 @@ NW - оценка очень чувствительна к одиночным в
 2. **n × n** матрица **U** ортогональна, ![](https://latex.codecogs.com/gif.latex?U%5ETU%20%3D%20I_n) , и составлена из собственных векторов матрицы  ![](https://latex.codecogs.com/gif.latex?F%5ETF);
 3. **n × n** матрица **D** диагональна, ![](https://latex.codecogs.com/gif.latex?D%20%3D%20diag%28%5Csqrt%7B%5Clambda_1%7D%2C%5Cdots%2C%20%5Csqrt%28%5Clambda_n%29%29), ![](https://latex.codecogs.com/gif.latex?%5Clambda_1%2C%5Cdots%2C%20%5Clambda_n) - собственные значения матриц ![](https://latex.codecogs.com/gif.latex?F%5ETF%2C%20FF%5ET)
 
+Имея сингулярное разложение,получаем решение задачи наименьших квадратов в явном виде, не прибегая к трудоёмкому обращению матриц: ![](https://latex.codecogs.com/gif.latex?UD%5E%7B-1%7DV%5ET) 
+
+Вектор МНК- решения и МНК- аппроксимация *y* соответственно:
+
+![](https://latex.codecogs.com/gif.latex?%5Calpha^*%20%3D%20F%5E&plus;y%20%3D%20UD%5E%7B-1%7DV%5ETy)
+
+![](https://latex.codecogs.com/gif.latex?F%5Calpha%5E*%20%3D%20PFy%20%3D%20%28VDU%5ET%29UD%5E%7B-1%7DV%5ETy%20%3D%20VV%5ETy%20%3D%20%5Csum_%7Bj%3D1%7D%5Env_j%28v_j%5ETy%29)
+
+#### Реализация
+Был использован датасет [boston](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_boston.html#sklearn.datasets.load_boston) из всё того же scikit-learn
+Реализуем решение нормальной системы:
+```python
+def linear_regression(x_train, y_train, x_test):
+    X = np.array(x_train)
+    ones = np.ones(len(X))
+    X = np.column_stack((ones, X))
+    y = np.array(y_train)
+
+    Xt = transpose(X)
+    product = dot(Xt, X)
+    theInverse = inv(product)
+    w = dot(dot(theInverse, Xt), y)
+
+    predictions = []
+    x_test = np.array(x_test)
+    for i in x_test:
+        components = w[1:] * i
+        predictions.append(sum(components) + w[0])
+    predictions = np.asarray(predictions)
+    return predictions
+```
+строим матрицы ошибок и график значений одного признака (он имеет наибольшую величину корреляции) для визуализации распределения (для подтверждения соответствия после применения SVD)
+
+после получения первой функции, применяем к тем же данным SVD:
+```python
+    A = f_plot.values
+
+    temp = A.T.dot(A)
+    S, V = np.linalg.eig(temp)
+    S = np.diag(np.sqrt(S))
+
+    U = A.dot(V).dot(np.linalg.inv(S))
+    reconstructed_2 = U.dot(S).dot(V.T)
+    df_2 = pd.DataFrame(reconstructed_2, columns=f_plot.columns)
+    
+    train_2 = df_2[:train_size]
+    test_2 = df_2[train_size:]
+
+    x_train_2 = train_2.drop('Target', axis=1)
+    y_train_2 = train_2['Target']
+
+    x_test_2 = test_2.drop('Target', axis=1)
+    y_test_2 = test_2['Target']
+
+    res_2 = linear_regression(x_train_2, y_train_2, x_test_2)
+```
+
+Результаты:
+![](linreg.png)
 
 
 ### Проблема мультиколлинеарности
