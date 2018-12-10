@@ -123,6 +123,28 @@ NW - оценка очень чувствительна к одиночным в
 
 Различия с NW методом заключаются в дополнительном учёте новых коэффициентов ![](https://latex.codecogs.com/gif.latex?%5Cgamma_i).
 
+```python
+        prev_gammas = [0] * len(y)
+        cur_gammas = [1] * len(y)
+        cur_loo = self.__loo(x, y, h, cur_gammas)
+        min_loo = cur_loo
+        min_h = h
+        while cur_loo > precision and h > step:
+            h -= step
+            print(h)
+
+            idx = 0
+            while prev_gammas != cur_gammas:
+                prev_gammas = cur_gammas
+                for xi, yi in zip(x, y):
+                    newX = np.delete(x, xi)
+                    newY = np.delete(y, yi)
+                    parameter = self.__kern_smooth(xi, newX, newY, self._kernel, self._dist, h, cur_gammas)
+                    value = rectangle(abs(parameter - yi))
+                    cur_gammas[idx] = value
+                    idx += 1
+```
+
 | hopt  |  method | core          | SSE     |
 |-------|---------|---------------|---------|
 |  0.019(9)     | NW      | quartic       | 6714.07 |
@@ -335,7 +357,7 @@ def getRMSEValues(X_test, y_test, wRRArray, max_lamda, poly):
     plotRMSEValue(max_lamda, RMSE_list, poly=poly)
 ```
 
-## Результаты
+#### Результаты
 
 ![](ridge_rmse.png)
 ![](dfl.png)
@@ -346,3 +368,6 @@ def getRMSEValues(X_test, y_test, wRRArray, max_lamda, poly):
 Таким образом, мы можем сказать, что для решения наименьших квадратов признаки 4 и 6 являются наиболее важными, которые влияют на решение, но поскольку мы всегда стараемся упорядочить веса, чтобы они были маленькими, их веса получают наибольшее штраф, если включить гиперпараметр (λ) для ridgereg и изменить его
 
 Поскольку λ всегда больше 0, увеличение значений λ приводит к уменьшению степеней свободы и регуляризованных весов для всех ковариат в нашем решении.
+
+### Primary Component Analisys
+Ещё одно решение проблемы мультиколлинеарности - подвергнуть исходные признаки функциональному преобразованию, гарантировав линейную независимость новых признаков, и, возможно, сократив их количество, уменьшив размерность задачи.
