@@ -233,6 +233,12 @@ def linear_regression(x_train, y_train, x_test):
 
 Результаты:
 ![](linreg.png)
+![](div.png)
+
+| method | SSE |
+|--------------|---------|
+| SVD linreg     | 3553.86033953874|
+| casual linreg |8654.375722902236 |
 
 
 ### Проблема мультиколлинеарности
@@ -298,4 +304,45 @@ def linear_regression(x_train, y_train, x_test):
 Подбирать  **τ**  можно по CV, но это слишком долгая процедура. На практике  **τ** - в диапазоне (0.1, 0.4)
 
 ### Реализация
+```python
+def solve_ridge_regression(X, y):
+    wRR_list = []
+    df_list = []
+    for i in range(0, 5001, 1):
+        lam_par = i
+        xtranspose = np.transpose(X)
+        xtransx = np.dot(xtranspose, X)
+        if xtransx.shape[0] != xtransx.shape[1]:
+            raise ValueError('Needs to be a square matrix for inverse')
+        lamidentity = np.identity(xtransx.shape[0]) * lam_par
+        matinv = np.linalg.inv(lamidentity + xtransx)
+        xtransy = np.dot(xtranspose, y)
+        wRR = np.dot(matinv, xtransy)
+        _, S, _ = np.linalg.svd(X)
+        df = np.sum(np.square(S) / (np.square(S) + lam_par))
+        wRR_list.append(wRR)
+        df_list.append(df)
+    return wRR_list, df_list
+```
+```python
+def getRMSEValues(X_test, y_test, wRRArray, max_lamda, poly):
+    RMSE_list = []
+    for lamda in range(0, max_lamda+1):
+        wRRvals = wRRArray[lamda]
+        y_pred = np.dot(X_test, wRRvals)
+        RMSE = np.sqrt(np.sum(np.square(y_test - y_pred))/len(y_test))
+        RMSE_list.append(RMSE)
+    plotRMSEValue(max_lamda, RMSE_list, poly=poly)
+```
 
+## Результаты
+
+![](ridge_rmse.png)
+![](dfl.png)
+
+Из решения мы знаем, что когда df (λ) является максимальным значением, это соответствует λ, равному 0, что является решением наименьших квадратов. 
+Шестой признак  и чётвёртый имеют наибольшую величину, что указывает на то, что они являются наиболее важными характеристиками при определении стоимости недвижимости на этих данных.
+
+Таким образом, мы можем сказать, что для решения наименьших квадратов признаки 4 и 6 являются наиболее важными, которые влияют на решение, но поскольку мы всегда стараемся упорядочить веса, чтобы они были маленькими, их веса получают наибольшее штраф, если включить гиперпараметр (λ) для ridgereg и изменить его
+
+Поскольку λ всегда больше 0, увеличение значений λ приводит к уменьшению степеней свободы и регуляризованных весов для всех ковариат в нашем решении.
