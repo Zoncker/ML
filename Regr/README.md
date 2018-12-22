@@ -430,3 +430,47 @@ PCA относится к методам обучения без учителя 
 
 ![](https://latex.codecogs.com/svg.latex?E%28m%29%20%3D%20%5Cfrac%7B%5Cleft%20%5C%7C%20GU%5ET-F%20%5Cright%20%5C%7C%5E2%7D%7B%5Cleft%20%5C%7C%20F%20%5Cright%20%5C%7C%5E2%7D%20%3D%20%5Cfrac%7B%5Clambda_%7Bm&plus;1%7D&plus;%5Cdots&plus;%5Clambda_n%7D%7B%5Clambda_1&plus;%5Cdots&plus;%5Clambda_n%7D%20%5Cleq%20%5Cvarepsilon)
 
+### Нелинейная модель регрессии
+
+Относительно данной темы рассматриваются случаи, когда модель регрессии нелинейна по параметрам, когда в линейную модель добавляются нелинейные преобразования исходных признаков или целевого признака, а также когда вводится неквадратичная функция потерь.
+
+
+В любом случае, нелинейная задача сводится к решению последовательности линейных задач.
+
+
+Пусть задана нелинейная модель регрессии ![](https://latex.codecogs.com/svg.latex?f%28x%2C%5Calpha%29) и требуется минимизировать функционал качества по вектору параметров ![](https://latex.codecogs.com/svg.latex?%5Calpha%20%5Cin%20%5Cmathbb%7BR%7D%5Ep%3A) 
+
+![](https://latex.codecogs.com/svg.latex?Q%28%5Calpha%2C%20X%5El%29%20%3D%20%5Csum_%7Bi%3D1%7D%5El%28f%28x_i%2C%5Calpha%29-y_i%29%5E2)
+
+Для выполнения численной минимизации функционала Q воспользуемся методом Ньютона–Рафсона. Выберем начальное приближение
+![](https://latex.codecogs.com/svg.latex?%5Calpha%5E0%3D%28%5Calpha%5E0_1%2C%5Cdots%2C%5Calpha_p%5E0%29) и органи-
+зуем итерационный процесс
+
+![](https://latex.codecogs.com/svg.latex?%5Calpha%5E%7Bt&plus;1%7D%3A%3D%5Calpha%5Et-h_t%28Q%27%27%28%5Calpha%5Et%29%29%5E%7B-1%7DQ%27%28%5Calpha%5Et%29)
+
+где ![](https://latex.codecogs.com/svg.latex?Q%27%28%5Calpha%5Et%29) - градиент функционала **Q** в точке ![](https://latex.codecogs.com/svg.latex?%5Calpha%5Et%2C%20Q%27%27%28%5Calpha%5Et%29)  -  гессиан (матрица вто-
+рых производных) функционала Q в точке ![](https://latex.codecogs.com/svg.latex?%5Calpha%5Et%2C%20h_t) величина шага, который можно регулировать, а в простейшем варианте просто полагать равным единице.
+
+Компоненты градиента:
+
+![](https://latex.codecogs.com/svg.latex?%5Cfrac%7B%5Cpartial%5E2%7D%7B%5Cpartial%5Calpha_j%7DQ%28%5Calpha%29%20%3D%202%5Csum_%7Bi%3D1%7D%5El%28f%28x_i%2C%5Calpha%29-y_i%29%5Cfrac%7B%5Cpartial%20f%7D%7B%5Cpartial%20%5Calpha_j%7D%28x_i%2C%20%5Calpha%29)
+
+компоненты гессиана:
+
+![](https://latex.codecogs.com/svg.latex?%5Cfrac%7B%5Cpartial%5E2%7D%7B%5Cpartial%5Calpha_j%7DQ%28%5Calpha%29%20%3D%202%5Csum_%7Bi%3D1%7D%5El%5Cfrac%7B%5Cpartial%20f%7D%7B%5Cpartial%20%5Calpha_j%7D%28x_i%2C%20%5Calpha%29%5Cfrac%7B%5Cpartial%20f%7D%7B%5Cpartial%20%5Calpha_k%7D%28x_i%2C%20%5Calpha%29-2%5Csum_%7Bi%3D1%7D%5El%28f%28x_i%2C%5Calpha%29-y_i%29%5Cfrac%7B%5Cpartial%5E2%20f%7D%7B%5Cpartial%20%5Calpha_j%5Cpartial%5Calpha_k%7D%28x_i%2C%5Calpha%29)
+
+TeX - код, как всегда, мощный
+
+\frac{\partial^2}{\partial\alpha_j}Q(\alpha) = 2\sum_{i=1}^l\frac{\partial f}{\partial \alpha_j}(x_i, \alpha)\frac{\partial f}{\partial \alpha_k}(x_i, \alpha)-2\sum_{i=1}^l(f(x_i,\alpha)-y_i)\frac{\partial^2 f}{\partial \alpha_j\partial\alpha_k}(x_i,\alpha)
+
+Поскольку функция f задана, градиент и гессиан легко вычисляются численно.
+
+Основная сложность метода Ньютона–Рафсона заключается в обращении гессиана на каждой итерации.
+
+Более эффективной с вычислительной точки зрения является следующая модификация этого метода. 
+
+Если функция f достаточно гладкая (дважды непрерывно дифференцируема), то её можно линеаризовать в окрестности текущего значения вектора коэффициентов ![](https://latex.codecogs.com/svg.latex?%5Calpha%5Et):
+
+![](https://latex.codecogs.com/svg.latex?f%28x_i%2C%20%5Calpha%29%20%3D%20f%28x_i%2C%20%5Calpha%5Et%29%20&plus;%20%5Csum_%7Bj%3D1%7D%5Ep%5Cfrac%7B%5Cpartial%20f%7D%7B%5Cpartial%20%5Calpha_j%7D%28x_i%2C%20%5Calpha_j%29%28%5Calpha_j-%5Calpha_j%5Et%29)
+
+Заменим в гессиане функцию f на её линеаризацию. Это всё равно, что положить второе слагаемое в гессиане равным нулю. Тогда не нужно будет вычислять
