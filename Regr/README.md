@@ -369,5 +369,64 @@ def getRMSEValues(X_test, y_test, wRRArray, max_lamda, poly):
 
 Поскольку λ всегда больше 0, увеличение значений λ приводит к уменьшению степеней свободы и регуляризованных весов для всех ковариат в нашем решении.
 
-### Primary Component Analisys
+### Метод главных компонент
 Ещё одно решение проблемы мультиколлинеарности - подвергнуть исходные признаки функциональному преобразованию, гарантировав линейную независимость новых признаков, и, возможно, сократив их количество, уменьшив размерность задачи.
+
+
+В методе главных компонент (principal component analysis, PCA) строится минимальное число новых признаков, по которым исходные признаки восстанавливаются линейным преобразованием с минимальными погрешностями.
+
+
+PCA относится к методам обучения без учителя (unsupervised learning), поскольку преобразование строится только по матрице «объекты–признаки» **F** без учёта целевого вектора **y**.
+
+Пусть имеется **n** исходных числовых признаков ![](https://latex.codecogs.com/svg.latex?f_j%28x%29%2C%20j%20%3D%201%2C%20%5Cdots%2C%20n). Рассмотрим матрицу **F**, строки которой соответствуют признаковым описаниям обучающих объектов:
+
+
+![](https://latex.codecogs.com/svg.latex?F_%7Bl%20%5Ctimes%20n%7D%20%3D%20%5Cbegin%7Bpmatrix%7D%20f_1%28x_1%29%20%26%5Cdots%20%26f_n%28x_n%29%20%5C%5C%20%5Cdots%20%26%20%5Cdots%20%26%20%5Cdots%20%5C%5C%20f_1%28x_l%29%20%26%20%5Cdots%20%26%20f_n%28x_l%29%20%5Cend%7Bpmatrix%7D%20%3D%20%5Cbegin%7Bpmatrix%7D%20x_1%5C%5C%20%5Cdots%5C%5C%20x_l%20%5Cend%7Bpmatrix%7D)
+
+Обозначим через ![](https://latex.codecogs.com/svg.latex?z_i%20%3D%20%28g_1%28x_i%29%2C%5Cdots%2Cg_m%28x_i%29%29) признаковые описания тех же объектов в новом пространстве ![](https://latex.codecogs.com/svg.latex?Z%20%3D%20%5Cmathbb%7BR%7D%5Em) меньшей размерности, ![](https://latex.codecogs.com/svg.latex?m%3Cn):
+
+
+![](https://latex.codecogs.com/svg.latex?G_%7Bl%20%5Ctimes%20m%7D%20%3D%20%5Cbegin%7Bpmatrix%7D%20g_1%28x_1%29%20%26%5Cdots%20%26g_n%28x_n%29%20%5C%5C%20%5Cdots%20%26%20%5Cdots%20%26%20%5Cdots%20%5C%5C%20g_1%28x_l%29%20%26%20%5Cdots%20%26%20g_n%28x_l%29%20%5Cend%7Bpmatrix%7D%20%3D%20%5Cbegin%7Bpmatrix%7D%20z_1%5C%5C%20%5Cdots%5C%5C%20z_l%20%5Cend%7Bpmatrix%7D)
+
+Восстановление исходных признаковых описаний через линейное преобразование, определяемого матрицей ![](https://latex.codecogs.com/svg.latex?U%3D%28u_%7Bjs%7D%29_%7Bn%5Ctimes%20m%7D)
+
+![](https://latex.codecogs.com/svg.latex?%5Chat%7Bf%7D_j%28x%29%20%3D%20%5Csum_%7Bs%3D1%7D%5Emg_s%28x%29u_%7Bjs%7D%2C%20j%3D1%2C%5Cdots%2Cn%2C%20x%5Cin%20X)
+
+Будем искать матрицу новых признаковых описаний **G** и матрицу линейного преобразования **U** , при
+которых суммарная невязка восстановленных описаний минимальна: 
+
+![](https://latex.codecogs.com/svg.latex?%5CDelta%5E2%28G%2CU%29%20%3D%20%5Csum_%7Bi%3D1%7D%5El%5Cleft%20%5C%7C%5Chat%7Bx_i%7D-x_i%20%5Cright%20%5C%7C%5E2%20%3D%20%5Csum_%7Bi%3D1%7D%5El%5Cleft%20%5C%7C%20z_iU%5ET%20-%20x_i%20%5Cright%20%5C%7C%5E2%20%3D%20%5Cleft%20%5C%7C%20GU%5ET%20-%20F%20%5Cright%20%5C%7C%5E2%20%5Crightarrow%20%5Cmin_%7BG%2CU%7D)
+
+Связь с сингулярным разложением такова: если ![](https://latex.codecogs.com/svg.latex?m%20%3D%20n), то ![](https://latex.codecogs.com/svg.latex?%5CDelta%5E2%28G%2CU%29%3D0). 
+
+Тогда представление ![](https://latex.codecogs.com/svg.latex?F%20%3D%20GU%5ET) является точным и совпадает с сингулярным разложением: ![](https://latex.codecogs.com/svg.latex?F%20%3D%20GU%5ET%20%3D%20VDU%5ET), если ![](https://latex.codecogs.com/svg.latex?G%3DVD%2C%20%5CLambda%20%3DD%5E2).
+
+При этом матрица V ортогональна: ![](https://latex.codecogs.com/svg.latex?V%5ETV%3DI_m).
+
+Задача наименьших квадратов в новом признаковом пространстве имеет вид
+
+![](https://latex.codecogs.com/svg.latex?%5Cleft%20%5C%7C%20G%5Cbeta%20-%20y%20%5Cright%20%5C%7C%5E2%20%5Crightarrow%20%5Cmin_%5Cbeta.)
+
+Поскольку **U** ортогональна, ![](https://latex.codecogs.com/svg.latex?G%5Cbeta%3DGU%5ETU%5Cbeta%3DGU%5ET%5Calpha%2C%20%5Calpha%20%3D%20U%5Cbeta)
+
+Это означает, что задача наименьших квадратов в новом пространстве соответствует замене
+матрицы **F** на её приближение ![](https://latex.codecogs.com/svg.latex?GU%5ET) в исходной задаче наименьших квадратов.
+
+Новый вектор коэффициентов **β** связан со старым **α**
+тем же линейным преобразованием ![](https://latex.codecogs.com/svg.latex?U%3A%20%5Cbeta%20%3D%20U%5ETU%5Cbeta%3DU%5ET%5Calpha.)
+
+#### Эффективная размерность выборки 
+ 
+Главные компоненты содержат основную информацию о матрице **F** . Если точность приближения ![](https://latex.codecogs.com/svg.latex?F%5Capprox%20GU%5ET) вполне удовлетворяет, то остальные собственные векторы можно отбросить, то есть считать неин-
+формативными. 
+
+Число главных компонент m называют эффективной размерностью
+выборки. На практике её определяют следующим образом. Все собственные значения матрицы ![](https://latex.codecogs.com/svg.latex?F%5ETF) упорядочиваются по убыванию: ![](https://latex.codecogs.com/svg.latex?%5Clambda_1%20%5Cgeq%20%5Cdots%20%5Cgeq%20%5Clambda_n%20%5Cgeq%200.) 
+
+Задаётся пороговое значение ![](https://latex.codecogs.com/svg.latex?%5Cvarepsilon%20%5Cin%20%5B0%2C1%5D), достаточно близкое к нулю, и определяется наименьшее целое **m**, при котором относительная погрешность приближения матрицы **F** не превышает **ε**:
+
+Величина E(m) показывает, какая доля информации теряется при замене исходных признаковых описаний длины n на более короткие описания длины m. Метод главных компонент особенно эффективен в тех случаях, когда E(m) оказывается малым уже при малых значениях m.
+
+
+![](https://latex.codecogs.com/svg.latex?E%28m%29%20%3D%20%5Cfrac%7B%5Cleft%20%5C%7C%20GU%5ET-F%20%5Cright%20%5C%7C%5E2%7D%7B%5Cleft%20%5C%7C%20F%20%5Cright%20%5C%7C%5E2%7D%20%3D%20%5Cfrac%7B%5Clambda_%7Bm&plus;1%7D&plus;%5Cdots&plus;%5Clambda_n%7D%7B%5Clambda_1&plus;%5Cdots&plus;%5Clambda_n%7D%20%5Cleq%20%5Cvarepsilon)
+
