@@ -453,7 +453,7 @@ Mean Vector:
 Matrix:
  [[31.98753503  6.68135703 10.95518355]
  [ 6.68135703 34.98278433 15.2404642 ]
- [10.95518355 15.2404642  59.25820805]]
+ [10.95518355 15.2404642  29.25820805]]
  
 Eigenvector 1: 
 [[-0.31272384]
@@ -471,18 +471,39 @@ Eigenvector 3:
 [[ 0.65198218]
  [-0.74708187]
  [ 0.12956821]]
-Eigenvalue 3 from scatter matrix: 26.50873932018512
+Eigenvalue 3 from scatter matrix: 16.50873932018512
 ----------------------------------------
 ```
 ![](eigen.png)
 
+```python
+    eig_pairs = [(np.abs(eig_val_sc[i]), eig_vec_sc[:, i]) for i in range(len(eig_val_sc))]
 
+    eig_pairs.sort(key=lambda x: x[0], reverse=True)
+
+    for i in eig_pairs:
+        print((i[0]))
+
+    matrix_w = np.hstack((eig_pairs[0][1].reshape(3, 1), eig_pairs[1][1].reshape(3, 1)))
+    print('Matrix W:\n', matrix_w)
+
+    transformed = matrix_w.T.dot(all_samples)
+```
+
+Получив 3 собственных вектора, сокращаем размерность с трёх до двух, отбрасывая ненужный третий собственный вектор со значением 16 и проверяем точность восстановления исходного признакового пространства на оставшихся лучших двух:
+
+![](https://latex.codecogs.com/gif.latex?E%282%29%3D%5Cfrac%7B70&plus;28%7D%7B70&plus;28&plus;16%7D%20%3D%200.85)
+
+```
 Matrix W:
  [[-0.31272384 -0.69074093]
  [-0.42061711 -0.51473288]
  [-0.85163669  0.50786517]]
+```
 
+Ну и наконец, используем  2x3 матрицу W, полученную выше, для отображения выборки в новое подпространство:
 
+![](https://latex.codecogs.com/gif.latex?y%20%3D%20W%5ET%20%5Ctimes%20x)
 
 ![](trans.png)
 
