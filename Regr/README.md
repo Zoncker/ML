@@ -561,3 +561,82 @@ TeX - код, как всегда, мощный
 Базовый подход - минимизация градиентным спуском:
 
 ![](nlr1.png)
+
+Но есть метод Ньютона/алгоритм Ньютона/метод касательных. Его и используем для поиска экстремума функции.
+
+Следует отметить, что в случае квадратичной функции метод Ньютона находит экстремум за одну итерацию. Сходится с квадратичной скоростью, но функция должна быть выпукла.
+
+Метод Ньютона — Рафсона является улучшением метода Ньютона нахождения экстремума, описанного выше. Основное отличие заключается в том, что на очередной итерации каким-либо из методов одномерной оптимизации выбирается оптимальный шаг:
+
+```python
+def hess(p, x, y):
+    a, b, c, d = p
+    g = part_u(p, x, y)
+    u = func(p, x)
+
+    h = np.zeros((4, 4))
+    h[0, 1] = h[1, 0] = x * np.cos(c + b * x)
+    h[0, 2] = h[2, 0] = np.cos(c + b * x)
+    h[1, 1] = -a * x * x * np.sin(c + b * x)
+    h[1, 2] = h[2, 1] = -a * x * np.sin(c + b * x)
+    h[2, 2] = -a * np.sin(c + b * x)
+    for i in range(4):
+        for j in range(4):
+            h[i, j] = g[i] * g[j] + (u - y)*h[i, j]
+    return h
+```
+```python
+def golden_ratio(f, l, r, eps=1e-9, maxiter=100):
+    d = r-l
+    phi = (math.sqrt(5) - 1) / 2
+    f1 = f(l + d * phi * phi)
+    f2 = f(l + d * phi)
+    i = 0
+    while d > eps and i < maxiter:
+        i += 1
+        d *= phi
+        if f2 < f1:
+            l += d * phi
+            f1 = f2
+            f2 = f(l + d * phi)
+        else:
+            f2 = f1
+            f1 = f(l + d * phi * phi)
+    return l + d/2
+```
+```python
+    n = X.shape[0]
+    x = np.ones(4)
+    print(x)
+    for step in range(Max):
+        G = np.zeros(4)
+        H = np.zeros((4,4))
+        for i in range(n):
+            G += d_f(x, X[i], Y[i])
+            H += hess(x, X[i], Y[i])
+
+        d = -np.linalg.pinv(H).dot(G)
+        
+        def Qalpha(alpha):
+            return error(x + alpha * d, X, Y)
+
+        alpha_best = golden_ratio(Qalpha, 0, 10)
+        x = x + alpha_best * d
+        
+        Q = error(x, X, Y)
+        print(Q)
+```
+Вот как отработают оба алгоритма: Градиентный спуск с шагом 0.002 и Метод Ньютона — Рафсона. Мы видим, что оба сошлись к одному результату. По скорости, Метод Ньютона — Рафсона гораздо быстрее.
+
+![](nlr.png)
+
+Сравнивая SSE, NR имеет меньший, чем GD, показатель.
+
+
+SSE for Hessian
+
+0.047931069107828995
+
+SSE for GD
+
+0.7332028037800866
