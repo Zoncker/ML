@@ -256,7 +256,7 @@ def linear_regression(x_train, y_train, x_test):
 Результаты:
 ![](linreg.png)
 ![](div.png)
-
+![](linreg1.png)
 | method | SSE |
 |--------------|---------|
 | SVD linreg     | 3553.86033953874|
