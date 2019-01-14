@@ -80,8 +80,6 @@ net = NeuralNetwork([2, 10, 2], ["sigmoid", "softmax"])
             self.I.append(I)
             self.O.append(O)
             ret = O
-        # print(self.I)
-        # quit()
         return ret
 ```
 Обратный проход (backward pass)
