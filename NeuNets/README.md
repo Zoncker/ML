@@ -80,4 +80,38 @@
 ```
 
 ```python
+    def cost_grad(self, params, x, y):
+        self.params(params)
+
+        dI = [np.empty((x.shape[0], self.layers[q])) for q in range(self.len)]
+        dW = [np.empty(self.matrix_dimension(q)) for q in range(self.len - 1)]
+        db = [np.empty(self.layers[q + 1]) for q in range(self.len - 1)]
+
+        T = x.shape[0] 
+        m = self.layers[-1]  # output size
+        self.forward(x)  # forwarding all set
+
+        # compute dI for last layer
+        dI[-1] = (self.O[-1] - y) * self.deriv[-1](self.I[-1]) / T
+
+        # compute dI for previous layers
+        for q in range(self.len - 2, 0, -1):
+            dI[q] = np.dot(dI[q + 1], self.W[q].T) * self.deriv[q - 1](self.I[q])
+
+        # compute gradient from dI
+        for q in range(self.len - 1):
+            O = self.O[q].reshape(T, self.layers[q], 1)
+            D = dI[q + 1].reshape(T, 1, self.layers[q + 1])
+            # sum all T cases
+            dW[q] = np.sum(O * D, axis=0)
+            db[q] = np.sum(dI[q + 1], axis=0)
+
+        # serialize gradient to vector
+        ret = dW[0].ravel()
+        for q in range(1, self.len - 1):
+            ret = np.concatenate((ret.ravel(), dW[q].ravel()))
+        for q in range(0, self.len - 1):
+            ret = np.concatenate((ret.ravel(), db[q].ravel()))
+
+        return ret
 ```
