@@ -53,11 +53,6 @@
     x1, y1 = make_gaussian_quantiles(cov=2.,
                                      n_samples=200, n_features=2,
                                      n_classes=2, random_state=1)
-    x2, y2 = make_gaussian_quantiles(mean=(3, 3), cov=1.5,
-                                     n_samples=300, n_features=2,
-                                     n_classes=2, random_state=1)
-    x = np.concatenate((x1, x2))
-    y = np.concatenate((y1, - y2 + 1))
 ```
 
 Был реализован класс **NeuralNetwork**, содержащий необходимый функционал (методы оригинального **BackProp**) 
