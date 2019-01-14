@@ -109,3 +109,22 @@ def optimize(f, g, x0, maxiter=2000, gtol=1e-6, verbose=True, printfreq=50):
 ```
 
 Результаты
+
+
+## Оптимизация нейросети
+Обучим сеть на малом (недостаточном) количестве нейронов, после - добавим нейрон (старые значения сохранятся) и переобучим сеть.
+
+### Оптимальное прореживание нейросетей
+
+Это метод упрощения структуры регрессионной модели (в нашем случае - нейросети). 
+
+**Salience** - значимость веса ![](https://latex.codecogs.com/svg.latex?w_%7Bjh%7D) - изменение функционала ![](https://latex.codecogs.com/svg.latex?Q%28w%29) при его обнулении:  ![](https://latex.codecogs.com/svg.latex?S_%7Bjh%7D%20%3D%20w%5E2_%7Bjh%7D%5Cfrac%7B%5Cpartial%5E2%20Q%28w%29%7D%7B%5Cpartial%20w%5E2_%7Bjh%7D%7D)
+
+1. В BackProp вычисляем вторые производные ![](https://latex.codecogs.com/svg.latex?%5Cfrac%7B%5Cpartial%5E2%20Q%7D%7B%5Cpartial%20w%5E2_%7Bjh%7D%7D%2C%20%5Cfrac%7B%5Cpartial%5E2%20Q%7D%7B%5Cpartial%20w%5E2_%7Bhm%7D%7D)
+2. Если процесс минимизации ![](https://latex.codecogs.com/svg.latex?Q%28w%29) пришёл в минимум, то
+    - Упорядочить веса по убыванию ![](https://latex.codecogs.com/svg.latex?S_%7Bjh%7D);
+    - удалить **N** связей с наименьшей значимостью;
+    - снова запустить BackProp
+3. Если ![](https://latex.codecogs.com/svg.latex?Q%28w%2C%20X%5El%29%20%u0438%u043B%u0438%20Q%28w%2C%20X%5Ek%29) существенно ухудшился - вернуть последние удалённые связи и выйти.
+
+### Реализация
