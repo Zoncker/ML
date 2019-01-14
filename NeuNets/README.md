@@ -16,4 +16,11 @@
     -  Для всех **d** от *1* до *m* :
         - Подать ![](https://latex.codecogs.com/svg.latex?%5C%7Bx_i%5Ed%5C%7D)  на вход сети и подсчитать выходы ![](https://latex.codecogs.com/svg.latex?o_i) каждого узла.
         - Для всех ![](https://latex.codecogs.com/svg.latex?k%20%5Cin%20Outputs) **:** ![](https://latex.codecogs.com/svg.latex?%5Cdelta_k%20%3D%20o_k%281-o_k%29%28t_k-o_k%29)
-3. 
+        - Для каждого уровня **l**, начиная с предпоследнего: 
+            - Для каждого узла **j** уровня **l** вычислить ![](https://latex.codecogs.com/svg.latex?%5Cdelta_j%20%3D%20o_j%281-o_j%29%20%5Csum%20_%7Bk%20%5Cin%20Child%28j%29%7D%5Cdelta_k%20w_%7Bj%2Ck%7D)
+        - Для каждого ребра сети **{i, j}** : 
+![](https://latex.codecogs.com/svg.latex?%5CDelta%20w_%7Bi%2Cj%7D%28n%29%20%3D%20%5Calpha%20%5CDelta%20w_%7Bi%2Cj%7D%28n-1%29%20&plus;%20%281-%5Calpha%29%5Ceta%5Cdelta_j%20o_i) ![](https://latex.codecogs.com/svg.latex?w_%7Bi%2 Cj%7D%28n%29%3Dw_%7Bi%2Cj%7D%28n-1%29&plus;%5CDelta%20w_%7Bi%2Cj%7D%28n%29)
+3. Выдать значения ![](https://latex.codecogs.com/svg.latex?w_%7Bi%2Cj%7D)
+
+
+где ![](https://latex.codecogs.com/svg.latex?%5Calpha)  — коэффициент инерциальности для сглаживания резких скачков при перемещении по поверхности целевой функции
