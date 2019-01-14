@@ -6,7 +6,7 @@ Some ML labs and theory
 
 [Regression](Regr/README.md)
 
-[Neural Networks(WIP)](NeuNets/README.md)
+[Neural Networks](NeuNets/README.md)
 
 [Clusterization(WIP)](Clust/README.md)
 
