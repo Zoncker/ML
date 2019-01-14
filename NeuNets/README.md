@@ -61,6 +61,12 @@
 ```
 
 Был реализован класс **NeuralNetwork**, содержащий необходимый функционал (методы оригинального **BackProp**) 
+Возможно создать нейросеть с любым набором слоёв, количеством нейронов на каждом слое и функцией активации. Например:
+
+```python
+net = NeuralNetwork([2, 10, 2], ["sigmoid", "softmax"])
+```
+Метод прямого прохода по сети
 
 ```python
     def forward(self, x):
@@ -78,19 +84,8 @@
         # quit()
         return ret
 ```
-
+Обратный проход (backward pass)
 ```python
-    def cost_grad(self, params, x, y):
-        self.params(params)
-
-        dI = [np.empty((x.shape[0], self.layers[q])) for q in range(self.len)]
-        dW = [np.empty(self.matrix_dimension(q)) for q in range(self.len - 1)]
-        db = [np.empty(self.layers[q + 1]) for q in range(self.len - 1)]
-
-        T = x.shape[0] 
-        m = self.layers[-1]  # output size
-        self.forward(x)  # forwarding all set
-
         # compute dI for last layer
         dI[-1] = (self.O[-1] - y) * self.deriv[-1](self.I[-1]) / T
 
@@ -115,3 +110,9 @@
 
         return ret
 ```
+Основной метод, реализующий сопряжённые градиенты (принимает минимизируемую функцию, градиент, остальные параметры прозрачны)
+```python
+def optimize(f, g, x0, maxiter=2000, gtol=1e-6, verbose=True, printfreq=50):
+```
+
+Результаты
