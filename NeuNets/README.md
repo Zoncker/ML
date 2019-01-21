@@ -129,7 +129,7 @@ def optimize(f, g, x0, maxiter=2000, gtol=1e-6, verbose=True, printfreq=50):
 ```
 Точность на таких данных достаточно хорошая - 97%.
 
-!
+![](clmap.png)
 
 
 ## Оптимизация нейросети
