@@ -40,7 +40,7 @@
 
 На каждой итерации:
 1. Рассчитаем направление: ![](https://latex.codecogs.com/svg.latex?%5CDelta%20x_n%20%3D%20-%20%5CDelta_x%20f%28x_n%29)
-2. По формуле **Hestenes** и **Stiefel** вычислим : ![](https://latex.codecogs.com/svg.latex?%5Cbeta_n%20%3D%20%5Cfrac%7B%5CDelta%20x%5ET_n%28%5CDelta%20x_n%20-%20%5CDelta%20x_%7Bn-1%7D%29%7D%7BS%5ET_%7Bn-1%7D%28%5CDelta%20x_n%20-%20%5CDelta%20x_%7Bn-1%7D%29%7D)
+2. По формуле **Hestenes/Stiefel** вычислим : ![](https://latex.codecogs.com/svg.latex?%5Cbeta_n%20%3D%20%5Cfrac%7B%5CDelta%20x%5ET_n%28%5CDelta%20x_n%20-%20%5CDelta%20x_%7Bn-1%7D%29%7D%7BS%5ET_%7Bn-1%7D%28%5CDelta%20x_n%20-%20%5CDelta%20x_%7Bn-1%7D%29%7D)
 3. Обновим направление ![](https://latex.codecogs.com/svg.latex?S_n%20%3D%20%5CDelta%20x_n%20&plus;%20%5Cbeta_nS_%7Bn-1%7D)
 4. Оптимизируем направление (воспользуемся золотым сечением для поиска правой границы в спуске) ![](https://latex.codecogs.com/svg.latex?%5Calpha_n%20%3D%20%5Carg%5Cmin_%5Calpha%20f%28x_n%20&plus;%20%5Calpha%20S_n%29)
 5. обновим позицию ![](https://latex.codecogs.com/svg.latex?x_%7Bn&plus;1%7D%20%3D%20x_n%20&plus;%20%5Calpha_n%20S_n)
