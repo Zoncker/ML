@@ -310,6 +310,28 @@ def linear_regression(x_train, y_train, x_test):
 
 Эта задача удовлетворяет условиям теоремы Куна-Таккера. Однако тяжело думать, что алгоритм остановится толко после **2^k** итераций, особенно при больших **k**. На практике было замечено, что среднее число итераций варьируется в переделах **(.5k,.75k)**.
 
+Приведём задачу математического программирования к каноническому виду. Введём вместо каждой переменной ![](https://latex.codecogs.com/svg.latex?%5Calpha_j)  две неотрицательные переменные:
+
+![](https://latex.codecogs.com/svg.latex?%5Calpha_j%20%3D%20%5Calpha_j%5E&plus;%20-%20%5Calpha_j%5E-%20%5Cleq%20%5Ctau)
+
+При уменьшении ![](https://latex.codecogs.com/svg.latex?%5Ctau) всё большее число ограничений-неравенств становятся активными, превращаясь в строгие равенства 
+
+![](https://latex.codecogs.com/svg.latex?%5Calpha_j%5E&plus;%20%3D%20%5Calpha_j%5E-%20%3D%200),
+
+что соответствует обнулению коэффициента ![](https://latex.codecogs.com/svg.latex?%5Calpha_j) и и исключению j-го признака.
+
+#### Реализация
+Небольшие сниппеты из исходника. То самое ограничение
+```python
+    def _soft_thresholding_operator(self, x, lambda_):
+        if x > 0 and lambda_ < abs(x):
+            return x - lambda_
+        elif x < 0 and lambda_ < abs(x):
+            return x + lambda_
+        else:
+            return 0
+```
+
 ### Ridge Regression
 
 Для решения проблемы мультиколлинеарности припишем к функционалу **Q** дополнительное слагаемое, штрафующее большие значения нормы вектора весов ![](https://latex.codecogs.com/gif.latex?%5Cleft%20%5C%7C%20%5Calpha%20%5Cright%20%5C%7C): 
